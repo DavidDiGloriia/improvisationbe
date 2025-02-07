@@ -14,20 +14,7 @@
                 // Affichage du tarif
                 document.getElementById('total-price').textContent = `Total: ${totalPrice} €`;
 
-                // Récupérer l'amount à partir du champ de saisie
-                const amount = totalPrice;
-
-                // Envoi des données pour générer le QR code
-                const response = generateQRCode();
-                console.log(response)
-
-                new QRCode(document.getElementById("qr-image"), {
-                    text: "tel:+1234098765\nhttp://example.com/",
-                    width: 256,
-                    height: 256,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff"
-                });
+                generateQRCode();
 
             } catch (error) {
                 console.error("Erreur lors de la génération du QR code:", error);
@@ -36,6 +23,9 @@
 
 
         function generateQRCode() {
+
+            console.log("test")
+            console.log(process.env.IBAN);
 
              const value = [
                     'BCD',
@@ -51,9 +41,6 @@
                     'Match IMPROVISATION.BE',
                     'Match IMPROVISATION.BE'
                 ].join('\n');
-
-             console.log("wtf")
-             console.log(value)
 
             var url = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(value);
             document.getElementById('qr-image').setAttribute('src', url);
