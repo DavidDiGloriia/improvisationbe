@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Générer le QR Code avec Tarif</title><script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script><script>// Fonction pour générer le QR code avec les paramètres tarifaires
+        async function generateQr() {
+            try {
+                const childrenCount = document.getElementById('children').value;
+                const improCount = document.getElementById('impro').value;
+                const adultCount = document.getElementById('adult').value;
+
+                // Calcul du tarif
+                const childrenPrice = 7 * childrenCount;
+                const improPrice = 10 * improCount;
+                const adultPrice = 12 * adultCount;
+                const totalPrice = childrenPrice + improPrice + adultPrice;
+
+                // Affichage du tarif
+                document.getElementById('total-price').textContent = `Total: ${totalPrice} €`;
+
+                // Récupérer l'amount à partir du champ de saisie
+                const amount = totalPrice;
+
+                // Envoi des données pour générer le QR code
+                const response = generateQRCode();
+                console.log(response)
+
+                new QRCode(document.getElementById("qr-image"), {
+                    text: "tel:+1234098765\nhttp://example.com/",
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff"
+                });
+
+            } catch (error) {
+                console.error("Erreur lors de la génération du QR code:", error);
+            }
+        }
+
+
+        function generateQRCode() {
+
+             const value = [
+                    'BCD',
+                    '002',
+                    1,
+                    'SCT',
+                    '',
+                    'IMPROVISATION.BE',
+                    'BE64001234757052',
+                    15.0 === null ? '' : 'EUR' + 15.0.toFixed(2),
+                    '',
+                    '',
+                    'Match IMPROVISATION.BE',
+                    'Match IMPROVISATION.BE'
+                ].join('\n');
+
+             console.log("wtf")
+             console.log(value)
+
+            var url = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(value);
+            document.getElementById('qr-image').setAttribute('src', url);
+        }
+
+
+        // Fonction pour réinitialiser les champs
+        function resetFields() {
+            document.getElementById('children').value = 0;
+            document.getElementById('impro').value = 0;
+            document.getElementById('adult').value = 0;
+            document.getElementById('total-price').textContent = 'Total: 0 €';
+            document.getElementById('qr-image').src = ''; // Effacer l'image précédente
+        }
+
+        // Fonction pour augmenter/diminuer les valeurs
+        function updateCount(id, increment) {
+            const input = document.getElementById(id);
+            let value = parseInt(input.value, 10);
+            value += increment;
+            if (value < 0) value = 0; // Empêcher les valeurs négatives
+            input.value = value;
+        }</script><script defer="defer" src="improvisationbe/bundle.js"></script></head><body><div><label for="children">Enfants (7€ chaque):</label> <button onclick="updateCount('children', -1)">-</button> <input type="number" id="children" value="0" min="0" readonly="readonly"> <button onclick="updateCount('children', 1)">+</button></div><div><label for="impro">Impro (10€ chaque):</label> <button onclick="updateCount('impro', -1)">-</button> <input type="number" id="impro" value="0" min="0" readonly="readonly"> <button onclick="updateCount('impro', 1)">+</button></div><div><label for="adult">Adultes (12€ chaque):</label> <button onclick="updateCount('adult', -1)">-</button> <input type="number" id="adult" value="0" min="0" readonly="readonly"> <button onclick="updateCount('adult', 1)">+</button></div><div id="total-price">Total: 0 €</div><button onclick="generateQr()">Générer le QR Code</button> <button onclick="resetFields()">Réinitialiser</button> <img id="qr-image" alt="QR Code" style="margin-top: 20px;"/></body></html>
