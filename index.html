@@ -45,19 +45,22 @@
         .form-group button {
             background-color: #007bff;
             color: #fff;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             padding: 10px;
-            width: 40px;
+            width: 60px;
+            height: 60px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
 
         .form-group input {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             padding: 10px;
             width: 60px;
+            height: 60px;
             text-align: center;
+            justify-content: center;
             border: 1px solid #ccc;
             border-radius: 5px;
             margin: 0 10px;
@@ -69,12 +72,19 @@
 
         #total-price {
             font-size: 1.5rem;
+            padding: 5px;
             color: #333;
             margin-top: 20px;
+            text-align: right;
+            border-radius: 5px;
+        }
+
+        #eur {
+            font-size: 1.7rem;
         }
 
         button {
-            background-color: #28a745;
+            background-color: #007bff;
             color: white;
             font-size: 1rem;
             padding: 12px 20px;
@@ -86,7 +96,7 @@
         }
 
         button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
 
         #qr-image {
@@ -149,7 +159,7 @@
             color: #000;
             text-decoration: none;
             cursor: pointer;
-        }</style><script defer="defer" src="bundle.js"></script></head><body><div class="container"><div class="form-group"><label for="children">Enfants (7€)</label> <button onclick="updateCount('children', -1)">-</button> <input type="number" id="children" value="0" min="0" readonly="readonly"> <button onclick="updateCount('children', 1)">+</button></div><div class="form-group"><label for="impro">Impro (10€)</label> <button onclick="updateCount('impro', -1)">-</button> <input type="number" id="impro" value="0" min="0" readonly="readonly"> <button onclick="updateCount('impro', 1)">+</button></div><div class="form-group"><label for="adult">Adultes (12€)</label> <button onclick="updateCount('adult', -1)">-</button> <input type="number" id="adult" value="0" min="0" readonly="readonly"> <button onclick="updateCount('adult', 1)">+</button></div><div id="total-price">Total: 0 €</div><button onclick="generateQr()">Générer le QR Code</button> <button onclick="resetFields()">Réinitialiser</button></div><div id="qrModal" class="modal" onclick="closeModal(event)"><div class="modal-content" onclick="event.stopPropagation()"><span class="close" onclick="closeModal()">&times;</span><h2>Votre QR Code</h2><img id="qr-image" alt="QR Code"/><div id="iban"></div><div id="total-qr-code"></div></div></div><script>const IBAN='BE64001234757052';
+        }</style><script defer="defer" src="bundle.js"></script></head><body><div class="container"><div class="form-group"><label for="children">Enfants (7€)</label> <button onclick="updateCount('children', -1)">-</button> <input type="number" id="children" value="0" min="0" readonly="readonly"> <button onclick="updateCount('children', 1)">+</button></div><div class="form-group"><label for="impro">Impro (10€)</label> <button onclick="updateCount('impro', -1)">-</button> <input type="number" id="impro" value="0" min="0" readonly="readonly"> <button onclick="updateCount('impro', 1)">+</button></div><div class="form-group"><label for="adult">Adultes (12€)</label> <button onclick="updateCount('adult', -1)">-</button> <input type="number" id="adult" value="0" min="0" readonly="readonly"> <button onclick="updateCount('adult', 1)">+</button></div><div><input type="number" id="total-price" value="0" min="0"> <span id="eur">€</span></div><button onclick="generateQr()">Générer le QR Code</button> <button onclick="resetFields()">Réinitialiser</button></div><div id="qrModal" class="modal" onclick="closeModal(event)"><div class="modal-content" onclick="event.stopPropagation()"><span class="close" onclick="closeModal()">&times;</span><h2>Votre QR Code</h2><img id="qr-image" alt="QR Code"/><div id="iban"></div><div id="total-qr-code"></div></div></div><script>const IBAN='BE64001234757052';
     let total = 0;
 
     function updateCount(type, change) {
@@ -161,13 +171,19 @@
         updateTotal();
     }
 
+    const totalPriceInput = document.getElementById("total-price");
+
+    totalPriceInput.addEventListener("input", function () {
+        total =  parseFloat(totalPriceInput.value);
+    });
+
     function updateTotal() {
         const childrenCount = parseInt(document.getElementById('children').value);
         const improCount = parseInt(document.getElementById('impro').value);
         const adultCount = parseInt(document.getElementById('adult').value);
 
         total = (childrenCount * 7) + (improCount * 10) + (adultCount * 12);
-        document.getElementById('total-price').textContent = `Total: ${total} €`;
+        document.getElementById('total-price').value = total;
     }
 
     function generateQr() {
