@@ -149,7 +149,10 @@
             color: #000;
             text-decoration: none;
             cursor: pointer;
-        }</style><script defer="defer" src="bundle.js"></script></head><body><div class="container"><h1>Calculatrice d'Entrées</h1><div class="form-group"><label for="children">Enfants (7€):</label> <button onclick="updateCount('children', -1)">-</button> <input type="number" id="children" value="0" min="0" readonly="readonly"> <button onclick="updateCount('children', 1)">+</button></div><div class="form-group"><label for="impro">Impro (10€):</label> <button onclick="updateCount('impro', -1)">-</button> <input type="number" id="impro" value="0" min="0" readonly="readonly"> <button onclick="updateCount('impro', 1)">+</button></div><div class="form-group"><label for="adult">Adultes (12€):</label> <button onclick="updateCount('adult', -1)">-</button> <input type="number" id="adult" value="0" min="0" readonly="readonly"> <button onclick="updateCount('adult', 1)">+</button></div><div id="total-price">Total: 0 €</div><button onclick="generateQr()">Générer le QR Code</button> <button onclick="resetFields()">Réinitialiser</button></div><div id="qrModal" class="modal" onclick="closeModal(event)"><div class="modal-content" onclick="event.stopPropagation()"><span class="close" onclick="closeModal()">&times;</span><h2>Votre QR Code</h2><img id="qr-image" alt="QR Code"/></div></div><script>function updateCount(type, change) {
+        }</style><script defer="defer" src="bundle.js"></script></head><body><div class="container"><div class="form-group"><label for="children">Enfants (7€)</label> <button onclick="updateCount('children', -1)">-</button> <input type="number" id="children" value="0" min="0" readonly="readonly"> <button onclick="updateCount('children', 1)">+</button></div><div class="form-group"><label for="impro">Impro (10€)</label> <button onclick="updateCount('impro', -1)">-</button> <input type="number" id="impro" value="0" min="0" readonly="readonly"> <button onclick="updateCount('impro', 1)">+</button></div><div class="form-group"><label for="adult">Adultes (12€)</label> <button onclick="updateCount('adult', -1)">-</button> <input type="number" id="adult" value="0" min="0" readonly="readonly"> <button onclick="updateCount('adult', 1)">+</button></div><div id="total-price">Total: 0 €</div><button onclick="generateQr()">Générer le QR Code</button> <button onclick="resetFields()">Réinitialiser</button></div><div id="qrModal" class="modal" onclick="closeModal(event)"><div class="modal-content" onclick="event.stopPropagation()"><span class="close" onclick="closeModal()">&times;</span><h2>Votre QR Code</h2><img id="qr-image" alt="QR Code"/><div id="iban"></div><div id="total-qr-code"></div></div></div><script>const IBAN='BE64001234757052';
+    let total = 0;
+
+    function updateCount(type, change) {
         const input = document.getElementById(type);
         let value = parseInt(input.value);
         value += change;
@@ -163,21 +166,35 @@
         const improCount = parseInt(document.getElementById('impro').value);
         const adultCount = parseInt(document.getElementById('adult').value);
 
-        const total = (childrenCount * 7) + (improCount * 10) + (adultCount * 12);
+        total = (childrenCount * 7) + (improCount * 10) + (adultCount * 12);
         document.getElementById('total-price').textContent = `Total: ${total} €`;
     }
 
     function generateQr() {
         // Placeholder logic to simulate QR code generation
-        const totalAmount = document.getElementById('total-price').textContent;
-        const qrCodeData = `Total: ${totalAmount}`;  // Replace with actual QR code data logic
+        const value = [
+            'BCD',
+            '002',
+            1,
+            'SCT',
+            '',
+            'IMPROVISATION.BE',
+            IBAN,
+            total === null ? '' : 'EUR' + total.toFixed(2),
+            '',
+            '',
+            'Match IMPROVISATION.BE',
+            'Match IMPROVISATION.BE'
+        ].join('\n');
 
         // Displaying the QR code in the modal (you can use a QR code library to generate real codes)
         const qrImage = document.getElementById('qr-image');
-        qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrCodeData)}&size=200x200`;
+        qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(value)}`;
 
         // Show modal
         document.getElementById('qrModal').style.display = "block";
+        document.getElementById('iban').textContent = IBAN;
+        document.getElementById('total-qr-code').textContent = `${total} €`;
     }
 
     function closeModal(event) {
