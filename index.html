@@ -1,62 +1,195 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Générer le QR Code avec Tarif</title><script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script><script src="index.js"></script><script src="/dist/bundle.js"></script><script>// Fonction pour générer le QR code avec les paramètres tarifaires
-        async function generateQr() {
-            try {
-                const childrenCount = document.getElementById('children').value;
-                const improCount = document.getElementById('impro').value;
-                const adultCount = document.getElementById('adult').value;
+<!doctype html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Formulaire de Calcul</title><style>/* Reset some default styles */
+        body, div, button, input {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-                // Calcul du tarif
-                const childrenPrice = 7 * childrenCount;
-                const improPrice = 10 * improCount;
-                const adultPrice = 12 * adultCount;
-                const totalPrice = childrenPrice + improPrice + adultPrice;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-                // Affichage du tarif
-                document.getElementById('total-price').textContent = `Total: ${totalPrice} €`;
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
 
-                generateQRCode();
+        h1 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-            } catch (error) {
-                console.error("Erreur lors de la génération du QR code:", error);
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 1rem;
+            color: #444;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .form-group button {
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1.25rem;
+            padding: 10px;
+            width: 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group input {
+            font-size: 1.25rem;
+            padding: 10px;
+            width: 60px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+
+        #total-price {
+            font-size: 1.5rem;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            font-size: 1rem;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #qr-image {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .form-group input, .form-group button {
+                font-size: 1rem;
+                width: 45px;
+                padding: 8px;
+            }
+
+            button {
+                padding: 12px;
             }
         }
 
-
-        function generateQRCode() {
-             const value = [
-                    'BCD',
-                    '002',
-                    1,
-                    'SCT',
-                    '',
-                    'IMPROVISATION.BE',
-                    'BE64001234757052',
-                    15.0 === null ? '' : 'EUR' + 15.0.toFixed(2),
-                    '',
-                    '',
-                    'Match IMPROVISATION.BE',
-                    'Match IMPROVISATION.BE'
-                ].join('\n');
-
-            var url = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(value);
-            document.getElementById('qr-image').setAttribute('src', url);
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
         }
 
-
-        // Fonction pour réinitialiser les champs
-        function resetFields() {
-            document.getElementById('children').value = 0;
-            document.getElementById('impro').value = 0;
-            document.getElementById('adult').value = 0;
-            document.getElementById('total-price').textContent = 'Total: 0 €';
-            document.getElementById('qr-image').src = ''; // Effacer l'image précédente
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
         }
 
-        // Fonction pour augmenter/diminuer les valeurs
-        function updateCount(id, increment) {
-            const input = document.getElementById(id);
-            let value = parseInt(input.value, 10);
-            value += increment;
-            if (value < 0) value = 0; // Empêcher les valeurs négatives
-            input.value = value;
-        }</script><script defer="defer" src="bundle.js"></script></head><body><div><label for="children">Enfants (7€ chaque):</label> <button onclick="updateCount('children', -1)">-</button> <input type="number" id="children" value="0" min="0" readonly="readonly"> <button onclick="updateCount('children', 1)">+</button></div><div><label for="impro">Impro (10€ chaque):</label> <button onclick="updateCount('impro', -1)">-</button> <input type="number" id="impro" value="0" min="0" readonly="readonly"> <button onclick="updateCount('impro', 1)">+</button></div><div><label for="adult">Adultes (12€ chaque):</label> <button onclick="updateCount('adult', -1)">-</button> <input type="number" id="adult" value="0" min="0" readonly="readonly"> <button onclick="updateCount('adult', 1)">+</button></div><div id="total-price">Total: 0 €</div><button onclick="generateQr()">Générer le QR Code</button> <button onclick="resetFields()">Réinitialiser</button> <img id="qr-image" alt="QR Code" style="margin-top: 20px;"/></body></html>V3
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }</style><script defer="defer" src="bundle.js"></script></head><body><div class="container"><h1>Calculatrice d'Entrées</h1><div class="form-group"><label for="children">Enfants (7€):</label> <button onclick="updateCount('children', -1)">-</button> <input type="number" id="children" value="0" min="0" readonly="readonly"> <button onclick="updateCount('children', 1)">+</button></div><div class="form-group"><label for="impro">Impro (10€):</label> <button onclick="updateCount('impro', -1)">-</button> <input type="number" id="impro" value="0" min="0" readonly="readonly"> <button onclick="updateCount('impro', 1)">+</button></div><div class="form-group"><label for="adult">Adultes (12€):</label> <button onclick="updateCount('adult', -1)">-</button> <input type="number" id="adult" value="0" min="0" readonly="readonly"> <button onclick="updateCount('adult', 1)">+</button></div><div id="total-price">Total: 0 €</div><button onclick="generateQr()">Générer le QR Code</button> <button onclick="resetFields()">Réinitialiser</button></div><div id="qrModal" class="modal" onclick="closeModal(event)"><div class="modal-content" onclick="event.stopPropagation()"><span class="close" onclick="closeModal()">&times;</span><h2>Votre QR Code</h2><img id="qr-image" alt="QR Code"/></div></div><script>function updateCount(type, change) {
+        const input = document.getElementById(type);
+        let value = parseInt(input.value);
+        value += change;
+        if (value < 0) value = 0;
+        input.value = value;
+        updateTotal();
+    }
+
+    function updateTotal() {
+        const childrenCount = parseInt(document.getElementById('children').value);
+        const improCount = parseInt(document.getElementById('impro').value);
+        const adultCount = parseInt(document.getElementById('adult').value);
+
+        const total = (childrenCount * 7) + (improCount * 10) + (adultCount * 12);
+        document.getElementById('total-price').textContent = `Total: ${total} €`;
+    }
+
+    function generateQr() {
+        // Placeholder logic to simulate QR code generation
+        const totalAmount = document.getElementById('total-price').textContent;
+        const qrCodeData = `Total: ${totalAmount}`;  // Replace with actual QR code data logic
+
+        // Displaying the QR code in the modal (you can use a QR code library to generate real codes)
+        const qrImage = document.getElementById('qr-image');
+        qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrCodeData)}&size=200x200`;
+
+        // Show modal
+        document.getElementById('qrModal').style.display = "block";
+    }
+
+    function closeModal(event) {
+        // If the user clicks outside the modal-content, close the modal
+        if (event.target === document.getElementById('qrModal')) {
+            document.getElementById('qrModal').style.display = "none";
+        }
+    }
+
+    function resetFields() {
+        document.getElementById('children').value = 0;
+        document.getElementById('impro').value = 0;
+        document.getElementById('adult').value = 0;
+        updateTotal();
+    }</script></body></html>
