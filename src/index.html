@@ -231,7 +231,7 @@
 </div>
 
 <script>
-    const IBAN='BE64001234757052';
+    const IBAN='BE68 0019 1372 6134';
     let total = 0;
 
     function updateCount(type, change) {
@@ -267,7 +267,7 @@
             'SCT',
             '',
             'IMPROVISATION.BE',
-            IBAN,
+            IBAN.replace(/\s/g, ''),
             total === null ? '' : 'EUR' + total.toFixed(2),
             '',
             '',
