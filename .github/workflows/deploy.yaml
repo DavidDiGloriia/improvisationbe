@@ -1,0 +1,4 @@
+- name: Create .env file with secret
+  run: |
+    echo "IBAN=${{ secrets.IBAN }}" > .env
+    echo "✅ .env file created"
