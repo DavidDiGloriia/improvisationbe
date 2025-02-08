@@ -80,31 +80,48 @@
             background-color: #0056b3;
         }
 
-        .price-container {
-            display: flex;
-            flex-direction: row;
-            align-content: center;
-            justify-content: center;
-            width: 100%;
-            height: 20vw;
-            flex: 90% 10%;
+        .total-price-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;  /* Ensures it takes up available space */
+            box-sizing: border-box; /* Prevents overflow */
         }
 
-        #total-price {
+        .total-price-container input {
+            padding-right: 40px; /* More padding for the € symbol */
             font-size: 2rem;
-            padding: 5px;
-            color: #333;
             text-align: right;
-            border-radius: 5px;
+            width: 100%; /* Full width for the input field */
+            box-sizing: border-box; /* Ensures padding doesn't overflow */
         }
 
-        #eur {
-            margin-left: 0.5rem;
+        .total-price-container .eur {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
             font-size: 2rem;
-            display: flex;
-            justify-content: left;
-            align-items: center;
         }
+
+        /* Media Query for smaller screens */
+        @media (max-width: 600px) {
+            .total-price-container {
+                width: 100%;
+            }
+
+            .total-price-container input {
+                font-size: 1.5rem; /* Smaller input text size for mobile */
+                padding-right: 30px; /* Adjust padding for mobile */
+            }
+
+            .total-price-container .eur {
+                font-size: 1.5rem; /* Smaller € symbol for mobile */
+                right: 8px; /* Adjust placement on smaller screens */
+            }
+        }
+
+
 
         button {
             background-color: #007bff;
@@ -155,7 +172,7 @@
         .buttons-group button {
             height: 10vh;
             font-size: 1.5rem;
-        }</style><script defer="defer" src="bundle.js"></script></head><body><div class="container"><div class="form-groups"><div class="form-group"><label for="children">Enfants (7€)</label> <button onclick="updateCount('children', -1)">-</button> <input type="number" id="children" value="0" min="0" readonly="readonly"> <button onclick="updateCount('children', 1)">+</button></div><div class="form-group"><label for="impro">Impro/Etudiants (10€)</label> <button onclick="updateCount('impro', -1)">-</button> <input type="number" id="impro" value="0" min="0" readonly="readonly"> <button onclick="updateCount('impro', 1)">+</button></div><div class="form-group"><label for="adult">Adultes (12€)</label> <button onclick="updateCount('adult', -1)">-</button> <input type="number" id="adult" value="0" min="0" readonly="readonly"> <button onclick="updateCount('adult', 1)">+</button></div></div><div class="price-container"><input type="number" id="total-price" value="0" min="0"> <span id="eur">€</span></div><div class="buttons-group"><button onclick="generateQr()">Générer le QR Code</button> <button onclick="resetFields()">Réinitialiser</button></div></div><div id="qrModal" class="modal" onclick="closeModal(event)"><div class="modal-content" onclick="event.stopPropagation()"><h2>Votre QR Code</h2><img id="qr-image" alt="QR Code"/><div id="iban"></div><div id="total-qr-code"></div></div></div><script>const IBAN='BE64001234757052';
+        }</style><script defer="defer" src="bundle.js"></script></head><body><div class="container"><div class="form-groups"><div class="form-group"><label for="children">Enfants (7€)</label> <button onclick="updateCount('children', -1)">-</button> <input type="number" id="children" value="0" min="0" readonly="readonly"> <button onclick="updateCount('children', 1)">+</button></div><div class="form-group"><label for="impro">Impro/Etudiants (10€)</label> <button onclick="updateCount('impro', -1)">-</button> <input type="number" id="impro" value="0" min="0" readonly="readonly"> <button onclick="updateCount('impro', 1)">+</button></div><div class="form-group"><label for="adult">Adultes (12€)</label> <button onclick="updateCount('adult', -1)">-</button> <input type="number" id="adult" value="0" min="0" readonly="readonly"> <button onclick="updateCount('adult', 1)">+</button></div></div><div class="price-container"><div class="total-price-container"><input type="number" id="total-price" value="0" min="0"> <span class="eur">€</span></div></div><div class="buttons-group"><button onclick="generateQr()">Générer le QR Code</button> <button onclick="resetFields()">Réinitialiser</button></div></div><div id="qrModal" class="modal" onclick="closeModal(event)"><div class="modal-content" onclick="event.stopPropagation()"><h2>Votre QR Code</h2><img id="qr-image" alt="QR Code"/><div id="iban"></div><div id="total-qr-code"></div></div></div><script>const IBAN='BE64001234757052';
     let total = 0;
 
     function updateCount(type, change) {
