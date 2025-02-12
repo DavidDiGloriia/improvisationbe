@@ -94,6 +94,16 @@
             box-sizing: border-box; /* Prevents overflow */
         }
 
+
+        .total-price-container div {
+            padding-right: 40px; /* More padding for the € symbol */
+            font-size: 2rem;
+            text-align: right;
+            width: 100%; /* Full width for the input field */
+            box-sizing: border-box; /* Ensures padding doesn't overflow */
+        }
+
+
         .total-price-container input {
             padding-right: 40px; /* More padding for the € symbol */
             font-size: 2rem;
@@ -118,6 +128,11 @@
             }
 
             .total-price-container input {
+                font-size: 1.5rem; /* Smaller input text size for mobile */
+                padding-right: 30px; /* Adjust padding for mobile */
+            }
+
+            .total-price-container div {
                 font-size: 1.5rem; /* Smaller input text size for mobile */
                 padding-right: 30px; /* Adjust padding for mobile */
             }
@@ -215,9 +230,40 @@
     </div>
     <div class="buttons-group">
         <button onclick="generateQr()">Générer le QR Code</button>
+        <button onclick="openChangeModal()">Rendu</button>
         <button onclick="resetFields()">Réinitialiser</button>
     </div>
 
+</div>
+
+<!-- Modal for change -->
+<div id="changeModal" class="modal" onclick="closeChangeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2>Montant à rendre</h2>
+        <div>
+            <div style="text-align: left; width: 100%; padding-bottom: 5px">Montant à payer</div>
+            <div class="total-price-container">
+                <div id="total-price-rendu">0</div>
+                <span class="eur">€</span>
+            </div>
+        </div>
+        <div>
+            <div style="text-align: left; width: 100%; padding-bottom: 5px">Reçu</div>
+            <div class="total-price-container">
+                <input type="number" id="montant-recu" value="0" min="0">
+                <span class="eur">€</span>
+            </div>
+        </div>
+        <div style="width: 100%; height: 2px; background-color: black; margin-bottom: 1rem;  margin-top: 1rem;"></div>
+        <div>
+            <div style="text-align: left; width: 100%; padding-bottom: 5px">Montant à rendre</div>
+            <div class="total-price-container">
+                <div id="montant-a-rendre">50</div>
+                <span class="eur">€</span>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <!-- Modal for QR Code -->
@@ -247,6 +293,14 @@
 
     totalPriceInput.addEventListener("input", function () {
         total =  parseFloat(totalPriceInput.value);
+    });
+
+    const montantRecuInput = document.getElementById("montant-recu");
+
+    montantRecuInput.addEventListener("input", function () {
+        const montantRecu = parseFloat(document.getElementById("montant-recu").value);
+        const montantARendre =  montantRecu - total;
+        document.getElementById("montant-a-rendre").innerText = montantARendre;
     });
 
     function updateTotal() {
@@ -285,10 +339,22 @@
         document.getElementById('total-qr-code').textContent = `${total} €`;
     }
 
+    function openChangeModal() {
+        document.getElementById('total-price-rendu').innerText = total;
+        document.getElementById('changeModal').style.display = "block";
+    }
+
     function closeModal(event) {
         // If the user clicks outside the modal-content, close the modal
         if (event.target === document.getElementById('qrModal')) {
             document.getElementById('qrModal').style.display = "none";
+        }
+    }
+
+    function closeChangeModal(event){
+        // If the user clicks outside the modal-content, close the modal
+        if (event.target === document.getElementById('changeModal')) {
+            document.getElementById('changeModal').style.display = "none";
         }
     }
 
