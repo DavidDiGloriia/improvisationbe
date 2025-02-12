@@ -205,7 +205,7 @@
         total =  parseFloat(totalPriceInput.value);
     });
 
-    totalPriceInput.addEventListener('focus', function() {
+    totalPriceInput.addEventListener('touchstart', function() {
         if (totalPriceInput.value === '0') {
             totalPriceInput.value = '';
         }
@@ -226,7 +226,7 @@
         document.getElementById("montant-a-rendre").innerText = isNaN(montantRecu)  ? 0 : montantARendre.toFixed(2);
     });
 
-    montantRecuInput.addEventListener('focus', function() {
+    montantRecuInput.addEventListener('touchstart', function() {
         if (montantRecuInput.value === '0') {
             montantRecuInput.value = '';
         }
