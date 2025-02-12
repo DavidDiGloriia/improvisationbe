@@ -215,8 +215,6 @@
         if (totalPriceInput.value === '0') {
             totalPriceInput.value = '';
         }
-
-        totalPriceInput.setSelectionRange(totalPriceInput.value.length, totalPriceInput.value.length);
     });
 
     totalPriceInput.addEventListener('blur', function() {
@@ -239,12 +237,11 @@
             montantRecuInput.value = '';
         }
     });
+
     montantRecuInput.addEventListener('touchstart', function() {
         if (montantRecuInput.value === '0') {
             montantRecuInput.value = '';
         }
-
-        montantRecuInput.setSelectionRange(totalPriceInput.value.length, totalPriceInput.value.length);
     });
 
     montantRecuInput.addEventListener('blur', function() {
