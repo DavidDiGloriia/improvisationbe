@@ -205,12 +205,37 @@
         total =  parseFloat(totalPriceInput.value);
     });
 
+    totalPriceInput.addEventListener('focus', function() {
+        if (totalPriceInput.value === '0') {
+            totalPriceInput.value = '';
+        }
+    });
+
+    totalPriceInput.addEventListener('blur', function() {
+        if (totalPriceInput.value === '' || isNaN(montantRecuInput.value)) {
+            total = 0;
+            totalPriceInput.value = 0;
+        }
+    });
+
     const montantRecuInput = document.getElementById("montant-recu");
 
     montantRecuInput.addEventListener("input", function () {
-        const montantRecu = parseFloat(document.getElementById("montant-recu").value);
+        const montantRecu = parseFloat(montantRecuInput.value);
         const montantARendre =  montantRecu - total;
-        document.getElementById("montant-a-rendre").innerText = montantARendre;
+        document.getElementById("montant-a-rendre").innerText = isNaN(montantRecu)  ? 0 : montantARendre.toFixed(2);
+    });
+
+    montantRecuInput.addEventListener('focus', function() {
+        if (montantRecuInput.value === '0') {
+            montantRecuInput.value = '';
+        }
+    });
+
+    montantRecuInput.addEventListener('blur', function() {
+        if (montantRecuInput.value === '' || isNaN(montantRecuInput.value)) {
+            montantRecuInput.value = '0';
+        }
     });
 
     function updateTotal() {
